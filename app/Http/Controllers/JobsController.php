@@ -19,6 +19,16 @@ $info->files=get_cols_where(new JobsFiles(),array("*"),array("jobsid"=>$info->id
 }
 return  view('index',['data'=>$data]);
 }
+public function onlydeleted(){
+    $data=get_cols_where_p_Deleted(new job(),array("*"),array(),'id','DESC',11);
+    if(!empty( $data)){
+    foreach( $data as $info){
+    $info->files=get_cols_where(new JobsFiles(),array("*"),array("jobsid"=>$info->id));
+    }
+    }
+    return  view('onlydeleted',['data'=>$data]);
+    }
+
 public function get_all_jobs(){
 $data=get_cols_where_p(new job(),array("*"),array(),'id','DESC',11);
 return response()->json( $data);
@@ -63,10 +73,21 @@ public function destroy($id){
 delete(new job(),array("id"=>$id));
 return redirect()->route('jobindex')->with(['success'=>'deleted successfully']);
 }
+
+public function restore($id){
+    //equent model
+   job::withTrashed()->find($id)->restore();
+    return redirect()->route('onlydeleted')->with(['success'=>'deleted successfully']);
+    }
+    public function ForceDelete($id){
+        //equent model
+       job::onlyTrashed()->find($id)->forceDelete();
+        return redirect()->route('onlydeleted')->with(['success'=>'deleted successfully']);
+        }
 public function ajax_search(Request $request){
 if($request->ajax()){
 $searchbyjobname=$request->searchbyjobname;
-$data=job::where("name","like","%{$searchbyjobname}%")->orderby("id","ASC")->paginate(1);
+$data=job::where("id","like","%{$searchbyjobname}%")->orderby("id","ASC")->paginate(1);
 return view('ajax_search',['data'=>$data]);
 }
 }

@@ -13,12 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('jobs', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->boolean('active');
-            $table->timestamps();
-          
+        Schema::table('jobs', function (Blueprint $table) {
+            $table->softDeletes();
         });
     }
 
@@ -29,6 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('jobs');
+        Schema::table('jobs', function (Blueprint $table) {
+            //
+        });
     }
 };

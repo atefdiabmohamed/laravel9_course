@@ -3,6 +3,11 @@ function get_cols_where_p($model=null,$columns=array(),$where=array(),$orderbyfi
 $data=$model::select($columns)->where($where)->orderby($orderbyfiled,$orderbytype)->paginate($paginationcounter);
 return  $data; 
 }
+function get_cols_where_p_Deleted($model=null,$columns=array(),$where=array(),$orderbyfiled='id',$orderbytype='ASC',$paginationcounter=11){
+    $data=$model::onlyTrashed($columns)->where($where)->orderby($orderbyfiled,$orderbytype)->paginate($paginationcounter);
+    return  $data; 
+    }
+
 function get_cols_where($model=null,$columns=array(),$where=array(),$orderbyfiled='id',$orderbytype='ASC'){
 $data=$model::select($columns)->where($where)->orderby($orderbyfiled,$orderbytype)->get();
 return  $data; 
